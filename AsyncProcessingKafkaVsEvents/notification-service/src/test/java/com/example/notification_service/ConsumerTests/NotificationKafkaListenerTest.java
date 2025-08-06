@@ -42,8 +42,6 @@ public class NotificationKafkaListenerTest {
     public void testNotificationConsumerReceivesKafkaMessage() throws InterruptedException {
         String orderId = "notification-test-1";
         producer.send(new ProducerRecord<>("order-topic", orderId));
-
-        // Wait for consumer to consume message
         TimeUnit.SECONDS.sleep(2);
 
         System.out.println("✅ Sent order to Kafka for notification: " + orderId);

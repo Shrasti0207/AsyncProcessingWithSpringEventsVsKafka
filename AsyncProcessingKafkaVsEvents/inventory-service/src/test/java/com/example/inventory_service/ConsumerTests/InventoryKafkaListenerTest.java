@@ -44,11 +44,7 @@ public class InventoryKafkaListenerTest {
     public void testInventoryConsumerReceivesKafkaMessage() throws InterruptedException {
         String orderId = "inventory-test-1";
         producer.send(new ProducerRecord<>("order-topic", orderId));
-
-        // Wait for consumer to consume message
-        TimeUnit.SECONDS.sleep(2); // You can improve this using Awaitility or capturing logs
-
-        // If logs are enabled, check logs manually
+        TimeUnit.SECONDS.sleep(2);
         System.out.println("✅ Sent order to Kafka for inventory: " + orderId);
     }
 
