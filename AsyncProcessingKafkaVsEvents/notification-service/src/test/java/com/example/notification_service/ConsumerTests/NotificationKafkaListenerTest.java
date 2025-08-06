@@ -1,5 +1,6 @@
 package com.example.notification_service.ConsumerTests;
 
+import com.example.notification_service.Kafka.KafkaNotificationListener;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 import java.util.Properties;
@@ -42,8 +44,8 @@ public class NotificationKafkaListenerTest {
     public void testNotificationConsumerReceivesKafkaMessage() throws InterruptedException {
         String orderId = "notification-test-1";
         producer.send(new ProducerRecord<>("order-topic", orderId));
-        TimeUnit.SECONDS.sleep(2);
-
+        String consumed = KafkaNotificationListener.receivedMessages.poll(3, TimeUnit.SECONDS);
+        assertThat(consumed).isEqualTo(orderId);
         System.out.println("✅ Sent order to Kafka for notification: " + orderId);
     }
 

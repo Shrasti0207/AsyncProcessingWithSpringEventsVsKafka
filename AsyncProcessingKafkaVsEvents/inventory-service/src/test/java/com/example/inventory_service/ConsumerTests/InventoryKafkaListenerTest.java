@@ -1,5 +1,6 @@
 package com.example.inventory_service.ConsumerTests;
 
+import com.example.inventory_service.Kafka.KafkaInventoryListener;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -15,6 +16,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
@@ -44,7 +46,8 @@ public class InventoryKafkaListenerTest {
     public void testInventoryConsumerReceivesKafkaMessage() throws InterruptedException {
         String orderId = "inventory-test-1";
         producer.send(new ProducerRecord<>("order-topic", orderId));
-        TimeUnit.SECONDS.sleep(2);
+        String consumed = KafkaInventoryListener.receivedMessages.poll(3, TimeUnit.SECONDS);
+        assertThat(consumed).isEqualTo(orderId);
         System.out.println("✅ Sent order to Kafka for inventory: " + orderId);
     }
 
